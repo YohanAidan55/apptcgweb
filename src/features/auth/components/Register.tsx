@@ -12,25 +12,32 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Visibility, VisibilityOff, Apple, Google } from "@mui/icons-material";
+import { Visibility, VisibilityOff, Google } from "@mui/icons-material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Logo from "@/components/shared/Logo.jsx";
 
-// --- ✅ Schéma de validation Zod
-const loginSchema = z.object({
-  email: z.string().email("Adresse email invalide"),
-  password: z
-    .string()
-    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
-});
+// --- ✅ Schéma de validation avec Zod
+const registerSchema = z
+  .object({
+    fullName: z.string().min(2, "Le nom complet est requis"),
+    email: z.string().email("Adresse email invalide"),
+    password: z
+      .string()
+      .min(8, "Le mot de passe doit contenir au moins 8 caractères")
+      .regex(/[0-9]/, "Le mot de passe doit contenir un chiffre")
+      .regex(/[^a-zA-Z0-9]/, "Le mot de passe doit contenir un symbole"),
+    agreeTerms: z.boolean().refine((val) => val === true, {
+      message: "Vous devez accepter les conditions d’utilisation",
+    }),
+  });
 
 // --- ✅ Type dérivé du schéma
-type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -39,13 +46,20 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      agreeTerms: false,
+    },
   });
 
-  const onSubmit = (data: LoginFormData) => {
+  // --- ✅ Soumission du formulaire
+  const onSubmit = (data: RegisterFormData) => {
     console.log("✅ Données validées :", data);
-    localStorage.setItem("token", "fake-token-123456");
+    localStorage.setItem("token", "fake-register-token");
     navigate("/home");
   };
 
@@ -58,19 +72,19 @@ export default function LoginForm() {
       sx={{ bgcolor: "#0d0d0d", color: "#fff" }}
     >
       <Container maxWidth="xs">
-        {/* Logo centré */}
+        {/* Logo + Header */}
         <Logo />
 
-        {/* Texte aligné à gauche */}
         <Box textAlign="left" mb={4}>
           <Typography variant="h6" fontWeight={700}>
-            Welcome back
+            Get started
           </Typography>
           <Typography variant="body2" color="gray">
-            Track values, scan new finds, and keep your TCG in sync.
+            Build your collection, track values, and sync across devices.
           </Typography>
         </Box>
 
+        {/* Formulaire */}
         <Paper
           elevation={6}
           sx={{
@@ -80,10 +94,28 @@ export default function LoginForm() {
             border: "1px solid #222",
           }}
         >
-          {/* ✅ Formulaire React Hook Form */}
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <TextField
+              label="Full name"
+              placeholder="Alex Collector"
+              fullWidth
+              margin="normal"
+              {...register("fullName")}
+              error={!!errors.fullName}
+              helperText={errors.fullName?.message}
+              InputProps={{
+                sx: {
+                  backgroundColor: "#1a1a1a",
+                  borderRadius: 2,
+                  input: { color: "#fff" },
+                },
+              }}
+              InputLabelProps={{ style: { color: "#aaa" } }}
+            />
+
+            <TextField
               label="Email"
+              placeholder="name@email.com"
               type="email"
               fullWidth
               margin="normal"
@@ -102,6 +134,7 @@ export default function LoginForm() {
 
             <TextField
               label="Password"
+              placeholder="Create a password"
               type={showPassword ? "text" : "password"}
               fullWidth
               margin="normal"
@@ -129,16 +162,27 @@ export default function LoginForm() {
               InputLabelProps={{ style: { color: "#aaa" } }}
             />
 
+            {/* Conditions du mot de passe */}
+            <Box textAlign="left" mt={1} mb={1} pl={1}>
+              <Typography variant="body2" color="gray">
+                • 8+ characters
+              </Typography>
+              <Typography variant="body2" color="gray">
+                • 1 number and 1 symbol
+              </Typography>
+            </Box>
+
+            {/* Terms & policy */}
             <Box
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              mt={1}
               mb={2}
             >
               <FormControlLabel
                 control={
                   <Checkbox
+                    {...register("agreeTerms")}
                     sx={{
                       color: "#aaa",
                       "&.Mui-checked": { color: "#d4af37" },
@@ -147,21 +191,26 @@ export default function LoginForm() {
                 }
                 label={
                   <Typography variant="body2" color="gray">
-                    Remember me
+                    I agree to Terms
                   </Typography>
                 }
               />
-              <Link
-                component={RouterLink}
-                to="/forgot-password"
-                underline="hover"
-                color="#d4af37"
-                sx={{ fontSize: "0.9rem" }}
-              >
-                Forgot password?
+              <Link href="#" underline="hover" color="#d4af37">
+                View policy
               </Link>
             </Box>
 
+            {errors.agreeTerms && (
+              <Typography
+                variant="body2"
+                color="error"
+                sx={{ ml: 1, mb: 1, fontSize: "0.8rem" }}
+              >
+                {errors.agreeTerms.message}
+              </Typography>
+            )}
+
+            {/* Bouton principal */}
             <Button
               type="submit"
               variant="contained"
@@ -175,7 +224,7 @@ export default function LoginForm() {
                 "&:hover": { bgcolor: "#c19e35" },
               }}
             >
-              Sign In
+              Create account
             </Button>
 
             <Typography
@@ -184,56 +233,41 @@ export default function LoginForm() {
               color="gray"
               sx={{ my: 2 }}
             >
-              Or continue with
+              Or sign up with
             </Typography>
 
-            <Box display="flex" gap={2}>
-              <Button
-                variant="outlined"
-                fullWidth
-                startIcon={<Apple />}
-                sx={{
-                  borderColor: "#333",
-                  color: "#fff",
-                  textTransform: "none",
-                  backgroundColor: "#1a1a1a",
-                  "&:hover": { backgroundColor: "#222" },
-                }}
-              >
-                Apple
-              </Button>
-              <Button
-                variant="outlined"
-                fullWidth
-                startIcon={<Google />}
-                sx={{
-                  borderColor: "#333",
-                  color: "#fff",
-                  textTransform: "none",
-                  backgroundColor: "#1a1a1a",
-                  "&:hover": { backgroundColor: "#222" },
-                }}
-              >
-                Google
-              </Button>
-            </Box>
+            <Button
+              variant="outlined"
+              fullWidth
+              startIcon={<Google />}
+              sx={{
+                borderColor: "#333",
+                color: "#fff",
+                textTransform: "none",
+                backgroundColor: "#1a1a1a",
+                "&:hover": { backgroundColor: "#222" },
+              }}
+            >
+              Continue with Google
+            </Button>
           </Box>
         </Paper>
 
+        {/* Bas de page */}
         <Typography
           variant="body2"
           align="center"
           color="gray"
           sx={{ mt: 3 }}
         >
-          Don’t have an account?{" "}
+          Already have an account?{" "}
           <Link
             component={RouterLink}
-            to="/register"
+            to="/login"
             underline="hover"
             color="#d4af37"
           >
-            Sign up
+            Sign in
           </Link>
         </Typography>
       </Container>
