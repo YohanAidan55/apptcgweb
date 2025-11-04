@@ -5,11 +5,22 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import type { UseFormRegister } from "react-hook-form";
+
 
 /**
  * Champ de formulaire universel compatible avec React Hook Form
  * et stylisé pour ton design sombre / doré.
  */
+interface FormInputProps {
+  name: string;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  register: UseFormRegister<any>;
+  error?: { message?: string };
+}
+
 export default function FormInput({
   name,
   label,
@@ -17,7 +28,7 @@ export default function FormInput({
   placeholder = "",
   register,
   error,
-}) {
+}: FormInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const isPassword = type === "password";

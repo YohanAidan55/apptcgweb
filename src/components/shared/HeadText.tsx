@@ -1,11 +1,15 @@
 import React from 'react';
-import logo from "@/assets/LogoApp.png";
 import {
     Box,
     Typography,
   } from "@mui/material";
 
-const HeadText = ({title, label}) => {
+interface HeadTextProps {
+  title: string;
+  label: string;
+}
+
+const HeadText: React.FC<HeadTextProps> = ({ title, label }) => {
     return(
         <Box textAlign="left" mb={4}>
           <Typography variant="h6" fontWeight={700}>

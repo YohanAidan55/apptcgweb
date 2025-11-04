@@ -4,13 +4,13 @@ import {
     Link,
   } from "@mui/material";
   import { useNavigate } from "react-router-dom";
-  import Logo from "@/components/shared/Logo.jsx";
-  import HeadText from "@/components/shared/HeadText.jsx";
   import { useForm } from "react-hook-form";
   import { z } from "zod";
   import { zodResolver } from "@hookform/resolvers/zod";
-  import FormInput from "@/components/shared/FormInput.jsx";
-  import ButtonForm from "@/components/shared/ButtonForm.jsx";
+    import Logo from "@/components/shared/Logo.tsx";
+  import HeadText from "@/components/shared/HeadText.tsx";
+  import FormInput from "@/components/shared/FormInput.tsx";
+  import ButtonForm from "@/components/shared/ButtonForm.tsx";
 
   
   // ✅ Schéma Zod

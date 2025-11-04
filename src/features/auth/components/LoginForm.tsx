@@ -17,10 +17,10 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Logo from "@/components/shared/Logo.jsx";
-import HeadText from "@/components/shared/HeadText.jsx";
-import FormInput from "@/components/shared/FormInput.jsx";
-import ButtonForm from "@/components/shared/ButtonForm.jsx";
+import Logo from "@/components/shared/Logo.tsx";
+import HeadText from "@/components/shared/HeadText.tsx";
+import FormInput from "@/components/shared/FormInput.tsx";
+import ButtonForm from "@/components/shared/ButtonForm.tsx";
 
 
 // --- ✅ Schéma de validation Zod

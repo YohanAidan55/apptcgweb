@@ -3,7 +3,11 @@ import {
     Button,
   } from "@mui/material";
 
-const ButtonForm = ({label}) => {
+interface ButtonFormProps {
+  label: string;
+}
+
+const ButtonForm: React.FC<ButtonFormProps> = ({ label }) => {
     return(
         <Button
         type="submit"
