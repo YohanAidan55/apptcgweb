@@ -2,16 +2,6 @@ import React from 'react';
 import logo from "@/assets/LogoApp.png";
 import {
     Box,
-    Button,
-    Checkbox,
-    Container,
-    FormControlLabel,
-    IconButton,
-    InputAdornment,
-    Link,
-    Paper,
-    TextField,
-    Typography,
   } from "@mui/material";
 
 const Logo = ({}) => {

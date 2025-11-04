@@ -18,6 +18,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Logo from "@/components/shared/Logo.jsx";
+import HeadText from "@/components/shared/HeadText.jsx";
+import FormInput from "@/components/shared/FormInput.jsx";
+import ButtonForm from "@/components/shared/ButtonForm.jsx";
+
 
 // --- ✅ Schéma de validation avec Zod
 const registerSchema = z
@@ -72,17 +76,11 @@ export default function RegisterForm() {
       sx={{ bgcolor: "#0d0d0d", color: "#fff" }}
     >
       <Container maxWidth="xs">
-        {/* Logo + Header */}
+
         <Logo />
 
-        <Box textAlign="left" mb={4}>
-          <Typography variant="h6" fontWeight={700}>
-            Get started
-          </Typography>
-          <Typography variant="body2" color="gray">
-            Build your collection, track values, and sync across devices.
-          </Typography>
-        </Box>
+        <HeadText title="Get started" 
+        label="Build your collection, track values, and sync across devices." />
 
         {/* Formulaire */}
         <Paper
@@ -95,71 +93,31 @@ export default function RegisterForm() {
           }}
         >
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-            <TextField
+
+            <FormInput
+              name="fullName"
               label="Full name"
-              placeholder="Alex Collector"
-              fullWidth
-              margin="normal"
-              {...register("fullName")}
-              error={!!errors.fullName}
-              helperText={errors.fullName?.message}
-              InputProps={{
-                sx: {
-                  backgroundColor: "#1a1a1a",
-                  borderRadius: 2,
-                  input: { color: "#fff" },
-                },
-              }}
-              InputLabelProps={{ style: { color: "#aaa" } }}
+              placeholder="Prenom Nom"
+              register={register}
+              error={errors.fullName}
             />
 
-            <TextField
+            <FormInput
+              name="email"
               label="Email"
-              placeholder="name@email.com"
               type="email"
-              fullWidth
-              margin="normal"
-              {...register("email")}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              InputProps={{
-                sx: {
-                  backgroundColor: "#1a1a1a",
-                  borderRadius: 2,
-                  input: { color: "#fff" },
-                },
-              }}
-              InputLabelProps={{ style: { color: "#aaa" } }}
+              placeholder="name@email.com"
+              register={register}
+              error={errors.email}
             />
 
-            <TextField
+            <FormInput
+              name="password"
               label="Password"
+              type="password"
               placeholder="Create a password"
-              type={showPassword ? "text" : "password"}
-              fullWidth
-              margin="normal"
-              {...register("password")}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              InputProps={{
-                sx: {
-                  backgroundColor: "#1a1a1a",
-                  borderRadius: 2,
-                  input: { color: "#fff" },
-                },
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((p) => !p)}
-                      edge="end"
-                      sx={{ color: "#888" }}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              InputLabelProps={{ style: { color: "#aaa" } }}
+              register={register}
+              error={errors.password}
             />
 
             {/* Conditions du mot de passe */}
@@ -211,21 +169,8 @@ export default function RegisterForm() {
             )}
 
             {/* Bouton principal */}
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{
-                mt: 1,
-                mb: 2,
-                bgcolor: "#d4af37",
-                color: "#000",
-                fontWeight: 600,
-                "&:hover": { bgcolor: "#c19e35" },
-              }}
-            >
-              Create account
-            </Button>
+            <ButtonForm label="Create account" />
+            
 
             <Typography
               variant="body2"

@@ -1,21 +1,23 @@
 import {
     Box,
-    Button,
-    TextField,
     Typography,
     Link,
   } from "@mui/material";
   import { useNavigate } from "react-router-dom";
   import Logo from "@/components/shared/Logo.jsx";
+  import HeadText from "@/components/shared/HeadText.jsx";
   import { useForm } from "react-hook-form";
   import { z } from "zod";
   import { zodResolver } from "@hookform/resolvers/zod";
+  import FormInput from "@/components/shared/FormInput.jsx";
+  import ButtonForm from "@/components/shared/ButtonForm.jsx";
+
   
   // ✅ Schéma Zod
   const schema = z.object({
     email: z
       .string()
-      .email("Please enter a valid email address"),
+      .email("Adresse email invalide"),
   });
   
   type ForgotPasswordForm = z.infer<typeof schema>;
@@ -59,61 +61,24 @@ import {
             maxWidth: 400,
           }}
         >
-          {/* Logo centré */}
-          <Logo />
+
+        <Logo />
   
-          {/* Texte à gauche */}
-          <Box textAlign="left" mb={4}>
-            <Typography variant="h6" fontWeight={700}>
-              Forgot password?
-            </Typography>
-            <Typography variant="body2" color="gray">
-              Enter your email address and we’ll send you instructions to reset your password.
-            </Typography>
-          </Box>
-  
-          {/* Champ email */}
-          <TextField
-            label="Email"
-            type="email"
-            variant="outlined"
-            fullWidth
-            required
-            {...register("email")}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            InputProps={{
-              sx: {
-                bgcolor: "#1c1c1c",
-                color: "white",
-                borderRadius: 2,
-              },
-            }}
-            InputLabelProps={{
-              sx: { color: "gray" },
-            }}
-            sx={{ mb: 3 }}
-          />
+        <HeadText title=" Forgot password?" 
+        label="Enter your email address and we’ll send you instructions to reset your password." />
+          
+            <FormInput
+               name="email"
+               label="Email"
+               type="email"
+               placeholder="name@email.com"
+               register={register}
+               error={errors.email}
+            />
+
   
           {/* Bouton */}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{
-              bgcolor: "#d4af37",
-              color: "black",
-              fontWeight: 600,
-              textTransform: "none",
-              borderRadius: 2,
-              py: 1.2,
-              "&:hover": {
-                bgcolor: "#c19b2e",
-              },
-            }}
-          >
-            Send reset link
-          </Button>
+          <ButtonForm label="Send reset link" />
   
           {/* Retour connexion */}
           <Typography

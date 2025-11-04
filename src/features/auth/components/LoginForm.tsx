@@ -18,13 +18,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Logo from "@/components/shared/Logo.jsx";
+import HeadText from "@/components/shared/HeadText.jsx";
+import FormInput from "@/components/shared/FormInput.jsx";
+import ButtonForm from "@/components/shared/ButtonForm.jsx";
+
 
 // --- ✅ Schéma de validation Zod
 const loginSchema = z.object({
   email: z.string().email("Adresse email invalide"),
   password: z
     .string()
-    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
 });
 
 // --- ✅ Type dérivé du schéma
@@ -58,18 +61,9 @@ export default function LoginForm() {
       sx={{ bgcolor: "#0d0d0d", color: "#fff" }}
     >
       <Container maxWidth="xs">
-        {/* Logo centré */}
         <Logo />
 
-        {/* Texte aligné à gauche */}
-        <Box textAlign="left" mb={4}>
-          <Typography variant="h6" fontWeight={700}>
-            Welcome back
-          </Typography>
-          <Typography variant="body2" color="gray">
-            Track values, scan new finds, and keep your TCG in sync.
-          </Typography>
-        </Box>
+        <HeadText title="Welcome back" label="Track values, scan new finds, and keep your TCG in sync." />
 
         <Paper
           elevation={6}
@@ -82,52 +76,25 @@ export default function LoginForm() {
         >
           {/* ✅ Formulaire React Hook Form */}
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-            <TextField
+            
+            <FormInput
+              name="email"
               label="Email"
               type="email"
-              fullWidth
-              margin="normal"
-              {...register("email")}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              InputProps={{
-                sx: {
-                  backgroundColor: "#1a1a1a",
-                  borderRadius: 2,
-                  input: { color: "#fff" },
-                },
-              }}
-              InputLabelProps={{ style: { color: "#aaa" } }}
+              placeholder="name@email.com"
+              register={register}
+              error={errors.email}
             />
 
-            <TextField
+            <FormInput
+              name="password"
               label="Password"
-              type={showPassword ? "text" : "password"}
-              fullWidth
-              margin="normal"
-              {...register("password")}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              InputProps={{
-                sx: {
-                  backgroundColor: "#1a1a1a",
-                  borderRadius: 2,
-                  input: { color: "#fff" },
-                },
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((p) => !p)}
-                      edge="end"
-                      sx={{ color: "#888" }}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              InputLabelProps={{ style: { color: "#aaa" } }}
+              type="password"
+              placeholder="Create a password"
+              register={register}
+              error={errors.password}
             />
+
 
             <Box
               display="flex"
@@ -162,21 +129,7 @@ export default function LoginForm() {
               </Link>
             </Box>
 
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{
-                mt: 1,
-                mb: 2,
-                bgcolor: "#d4af37",
-                color: "#000",
-                fontWeight: 600,
-                "&:hover": { bgcolor: "#c19e35" },
-              }}
-            >
-              Sign In
-            </Button>
+            <ButtonForm label="Sign In" />
 
             <Typography
               variant="body2"
