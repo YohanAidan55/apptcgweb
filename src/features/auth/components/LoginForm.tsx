@@ -1,84 +1,195 @@
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  Link,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Visibility, VisibilityOff, Apple, Google } from "@mui/icons-material";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Logo from "@/components/shared/Logo.tsx";
+import HeadText from "@/components/shared/HeadText.tsx";
+import FormInput from "@/components/shared/FormInput.tsx";
+import ButtonForm from "@/components/shared/ButtonForm.tsx";
 
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+// --- ✅ Schéma de validation Zod
+const loginSchema = z.object({
+  email: z.string().email("Adresse email invalide"),
+  password: z
+    .string()
+});
+
+// --- ✅ Type dérivé du schéma
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
+  // --- ✅ React Hook Form + Zod
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
-        // Faux login - accepte n'importe quel email/password
-        // Stocke un token fake dans le localStorage
-        localStorage.setItem('token', 'fake-token-123456');
+  const onSubmit = (data: LoginFormData) => {
+    console.log("✅ Données validées :", data);
+    localStorage.setItem("token", "fake-token-123456");
+    navigate("/home");
+  };
 
-        // Redirige vers la page home
-        navigate('/home');
-    };
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      sx={{ bgcolor: "#0d0d0d", color: "#fff" }}
+    >
+      <Container maxWidth="xs">
+        <Logo />
 
-    return (
-        <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            minHeight="100vh"
-            bgcolor="#f5f5f5"
+        <HeadText title="Welcome back" label="Track values, scan new finds, and keep your TCG in sync." />
+
+        <Paper
+          elevation={6}
+          sx={{
+            p: 3,
+            borderRadius: 3,
+            backgroundColor: "#111",
+            border: "1px solid #222",
+          }}
         >
+          {/* ✅ Formulaire React Hook Form */}
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            
+            <FormInput
+              name="email"
+              label="Email"
+              type="email"
+              placeholder="name@email.com"
+              register={register}
+              error={errors.email}
+            />
+
+            <FormInput
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="Create a password"
+              register={register}
+              error={errors.password}
+            />
+
+
             <Box
-                component="form"
-                onSubmit={handleLogin}
-                sx={{
-                    p: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 3,
-                    maxWidth: 400,
-                    width: '100%',
-                    bgcolor: 'white',
-                    borderRadius: 2,
-                    boxShadow: 3,
-                }}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mt={1}
+              mb={2}
             >
-                <Typography variant="h4" component="h1" textAlign="center">
-                    Connexion
-                </Typography>
-
-                <Typography variant="body2" color="text.secondary" textAlign="center">
-                    Entrez n'importe quel email et mot de passe pour tester
-                </Typography>
-
-                <TextField
-                    label="Email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    fullWidth
-                    autoComplete="email"
-                />
-
-                <TextField
-                    label="Mot de passe"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    fullWidth
-                    autoComplete="current-password"
-                />
-
-                <Button
-                    type="submit"
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                >
-                    Se connecter
-                </Button>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    sx={{
+                      color: "#aaa",
+                      "&.Mui-checked": { color: "#d4af37" },
+                    }}
+                  />
+                }
+                label={
+                  <Typography variant="body2" color="gray">
+                    Remember me
+                  </Typography>
+                }
+              />
+              <Link
+                component={RouterLink}
+                to="/forgot-password"
+                underline="hover"
+                color="#d4af37"
+                sx={{ fontSize: "0.9rem" }}
+              >
+                Forgot password?
+              </Link>
             </Box>
-        </Box>
-    );
+
+            <ButtonForm label="Sign In" />
+
+            <Typography
+              variant="body2"
+              align="center"
+              color="gray"
+              sx={{ my: 2 }}
+            >
+              Or continue with
+            </Typography>
+
+            <Box display="flex" gap={2}>
+              <Button
+                variant="outlined"
+                fullWidth
+                startIcon={<Apple />}
+                sx={{
+                  borderColor: "#333",
+                  color: "#fff",
+                  textTransform: "none",
+                  backgroundColor: "#1a1a1a",
+                  "&:hover": { backgroundColor: "#222" },
+                }}
+              >
+                Apple
+              </Button>
+              <Button
+                variant="outlined"
+                fullWidth
+                startIcon={<Google />}
+                sx={{
+                  borderColor: "#333",
+                  color: "#fff",
+                  textTransform: "none",
+                  backgroundColor: "#1a1a1a",
+                  "&:hover": { backgroundColor: "#222" },
+                }}
+              >
+                Google
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
+
+        <Typography
+          variant="body2"
+          align="center"
+          color="gray"
+          sx={{ mt: 3 }}
+        >
+          Don’t have an account?{" "}
+          <Link
+            component={RouterLink}
+            to="/register"
+            underline="hover"
+            color="#d4af37"
+          >
+            Sign up
+          </Link>
+        </Typography>
+      </Container>
+    </Box>
+  );
 }
