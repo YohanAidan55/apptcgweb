@@ -1,22 +1,21 @@
-import { useState } from "react";
 import {
   Box,
   Button,
   Checkbox,
   Container,
   FormControlLabel,
-  IconButton,
-  InputAdornment,
   Link,
   Paper,
-  TextField,
   Typography,
 } from "@mui/material";
-import { Visibility, VisibilityOff, Apple, Google } from "@mui/icons-material";
+import { Google } from "@mui/icons-material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useLoginUserMutation } from "@/Services/userApi.ts";
+
 import Logo from "@/components/shared/Logo.tsx";
 import HeadText from "@/components/shared/HeadText.tsx";
 import FormInput from "@/components/shared/FormInput.tsx";
@@ -34,10 +33,11 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   // --- ✅ React Hook Form + Zod
+   const [login, { isLoading, error }] = useLoginUserMutation();
+
   const {
     register,
     handleSubmit,
@@ -46,10 +46,14 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log("✅ Données validées :", data);
-    localStorage.setItem("token", "fake-token-123456");
-    navigate("/home");
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const result = await login(data).unwrap();   // ✅ APPEL API
+      localStorage.setItem("token", result.token);
+      navigate("/home");
+    } catch (e) {
+      console.error("❌ Login failed:", e);
+    }
   };
 
   return (
@@ -129,7 +133,16 @@ export default function LoginForm() {
               </Link>
             </Box>
 
-            <ButtonForm label="Sign In" />
+            <ButtonForm
+              label={isLoading ? "Signing in..." : "Sign In"}
+              disabled={isLoading}
+            />
+
+            {error && (
+              <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                Invalid email or password
+              </Typography>
+            )}
 
             <Typography
               variant="body2"
@@ -144,21 +157,8 @@ export default function LoginForm() {
               <Button
                 variant="outlined"
                 fullWidth
-                startIcon={<Apple />}
-                sx={{
-                  borderColor: "#333",
-                  color: "#fff",
-                  textTransform: "none",
-                  backgroundColor: "#1a1a1a",
-                  "&:hover": { backgroundColor: "#222" },
-                }}
-              >
-                Apple
-              </Button>
-              <Button
-                variant="outlined"
-                fullWidth
                 startIcon={<Google />}
+                onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}
                 sx={{
                   borderColor: "#333",
                   color: "#fff",
@@ -167,7 +167,7 @@ export default function LoginForm() {
                   "&:hover": { backgroundColor: "#222" },
                 }}
               >
-                Google
+                Continue with Google
               </Button>
             </Box>
           </Box>
