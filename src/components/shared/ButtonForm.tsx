@@ -1,30 +1,32 @@
-import React from 'react';
-import {
-    Button,
-  } from "@mui/material";
+import { Button } from "@mui/material";
 
-interface ButtonFormProps {
+export interface ButtonFormProps {
   label: string;
+  disabled?: boolean;
 }
 
-const ButtonForm: React.FC<ButtonFormProps> = ({ label }) => {
-    return(
-        <Button
-        type="submit"
-        variant="contained"
-        fullWidth
-        sx={{
-          mt: 1,
-          mb: 2,
-          bgcolor: "#d4af37",
-          color: "#000",
-          fontWeight: 600,
-          "&:hover": { bgcolor: "#c19e35" },
-        }}
-      >
-        {label}
-      </Button>
-    )
+export default function ButtonForm({ label, disabled }: ButtonFormProps) {
+  return (
+    <Button
+      type="submit"
+      variant="contained"
+      fullWidth
+      disabled={disabled}
+      sx={{
+        mt: 1,
+        mb: 2,
+        bgcolor: disabled ? "#8c7a3a" : "#d4af37",
+        color: "#000",
+        fontWeight: 600,
+        textTransform: "none",
+        borderRadius: 2,
+        py: 1.2,
+        "&:hover": {
+          bgcolor: disabled ? "#8c7a3a" : "#c19e35",
+        },
+      }}
+    >
+      {label}
+    </Button>
+  );
 }
-
-export default ButtonForm;

@@ -1,22 +1,21 @@
-import { useState } from "react";
 import {
   Box,
   Button,
   Checkbox,
   Container,
   FormControlLabel,
-  IconButton,
-  InputAdornment,
   Link,
   Paper,
-  TextField,
   Typography,
 } from "@mui/material";
-import { Visibility, VisibilityOff, Google } from "@mui/icons-material";
+import { Google } from "@mui/icons-material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useCreateUserMutation } from "@/Services/userApi.ts";
+
   import Logo from "@/components/shared/Logo.tsx";
   import HeadText from "@/components/shared/HeadText.tsx";
   import FormInput from "@/components/shared/FormInput.tsx";
@@ -26,26 +25,26 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // --- ✅ Schéma de validation avec Zod
 const registerSchema = z
   .object({
-    fullName: z.string().min(2, "Le nom complet est requis"),
+    firstName: z.string().min(2, "Deux caractères minimum requis"),
+    lastName: z.string().min(2, "Deux caractères minimum requis"),
+    userName: z.string().min(2, "Deux caractères minimum requis"),
     email: z.string().email("Adresse email invalide"),
     password: z
       .string()
       .min(8, "Le mot de passe doit contenir au moins 8 caractères")
       .regex(/[0-9]/, "Le mot de passe doit contenir un chiffre")
       .regex(/[^a-zA-Z0-9]/, "Le mot de passe doit contenir un symbole"),
-    agreeTerms: z.boolean().refine((val) => val === true, {
-      message: "Vous devez accepter les conditions d’utilisation",
-    }),
   });
 
 // --- ✅ Type dérivé du schéma
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
 
-  // --- ✅ React Hook Form + Zod
+  const navigate = useNavigate();
+  const [createUser, { isLoading }] = useCreateUserMutation();
+
+  // ✅ React Hook Form
   const {
     register,
     handleSubmit,
@@ -53,18 +52,32 @@ export default function RegisterForm() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
+      userName: "",     
       email: "",
-      password: "",
-      agreeTerms: false,
-    },
+      password: "",},
   });
 
-  // --- ✅ Soumission du formulaire
-  const onSubmit = (data: RegisterFormData) => {
-    console.log("✅ Données validées :", data);
-    localStorage.setItem("token", "fake-register-token");
-    navigate("/home");
+  // ✅ Soumission du formulaire → API
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      const result = await createUser({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        userName: data.userName,
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      // ✅ Le backend renvoie un token → on le stocke
+      localStorage.setItem("token", result.token);
+
+      navigate("/home");
+
+    } catch (err: any) {
+      console.error("❌ Erreur:", err);
+    }
   };
 
   return (
@@ -95,11 +108,27 @@ export default function RegisterForm() {
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
 
             <FormInput
-              name="fullName"
-              label="Full name"
-              placeholder="Prenom Nom"
+              name="firstName"
+              label="First name"
+              placeholder="Prenom"
               register={register}
-              error={errors.fullName}
+              error={errors.firstName}
+            />
+
+            <FormInput
+              name="lastName"
+              label="Last name"
+              placeholder="Nom"
+              register={register}
+              error={errors.lastName}
+            />
+
+            <FormInput
+              name="userName"
+              label="User name"
+              placeholder="Username"
+              register={register}
+              error={errors.lastName}
             />
 
             <FormInput
@@ -140,7 +169,6 @@ export default function RegisterForm() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    {...register("agreeTerms")}
                     sx={{
                       color: "#aaa",
                       "&.Mui-checked": { color: "#d4af37" },
@@ -158,18 +186,11 @@ export default function RegisterForm() {
               </Link>
             </Box>
 
-            {errors.agreeTerms && (
-              <Typography
-                variant="body2"
-                color="error"
-                sx={{ ml: 1, mb: 1, fontSize: "0.8rem" }}
-              >
-                {errors.agreeTerms.message}
-              </Typography>
-            )}
-
             {/* Bouton principal */}
-            <ButtonForm label="Create account" />
+            <ButtonForm
+              label={isLoading ? "Creating..." : "Create account"}
+              disabled={isLoading}
+            />
             
 
             <Typography
@@ -185,6 +206,7 @@ export default function RegisterForm() {
               variant="outlined"
               fullWidth
               startIcon={<Google />}
+              onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}
               sx={{
                 borderColor: "#333",
                 color: "#fff",

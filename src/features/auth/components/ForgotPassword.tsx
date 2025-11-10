@@ -1,104 +1,135 @@
 import {
-    Box,
-    Typography,
-    Link,
-  } from "@mui/material";
-  import { useNavigate } from "react-router-dom";
-  import { useForm } from "react-hook-form";
-  import { z } from "zod";
-  import { zodResolver } from "@hookform/resolvers/zod";
-    import Logo from "@/components/shared/Logo.tsx";
-  import HeadText from "@/components/shared/HeadText.tsx";
-  import FormInput from "@/components/shared/FormInput.tsx";
-  import ButtonForm from "@/components/shared/ButtonForm.tsx";
+  Box,
+  Typography,
+  Link,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-  
-  // ✅ Schéma Zod
-  const schema = z.object({
-    email: z
-      .string()
-      .email("Adresse email invalide"),
+import { useForgotPasswordMutation } from "@/Services/userApi.ts";
+
+import Logo from "@/components/shared/Logo.tsx";
+import HeadText from "@/components/shared/HeadText.tsx";
+import FormInput from "@/components/shared/FormInput.tsx";
+import ButtonForm from "@/components/shared/ButtonForm.tsx";
+
+
+// ✅ Schéma Zod
+const schema = z.object({
+  email: z.string().email("Adresse email invalide"),
+});
+
+type ForgotPasswordForm = z.infer<typeof schema>;
+
+
+export default function ForgotPassword() {
+
+  const navigate = useNavigate();
+
+  // ✅ Hook RTK Query
+  const [forgotPassword, { isLoading, error }] = useForgotPasswordMutation();
+
+  // ✅ React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ForgotPasswordForm>({
+    resolver: zodResolver(schema),
+    mode: "onTouched",
   });
-  
-  type ForgotPasswordForm = z.infer<typeof schema>;
-  
-  export default function ForgotPassword() {
-    const navigate = useNavigate();
-  
-    // ✅ React Hook Form + Zod
-    const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm<ForgotPasswordForm>({
-      resolver: zodResolver(schema),
-      mode: "onTouched",
-    });
-  
-    // ✅ Soumission du formulaire
-    const onSubmit = (data: ForgotPasswordForm) => {
-      alert(`A password reset link has been sent to ${data.email}`);
+
+  // ✅ Soumission
+  const onSubmit = async (data: ForgotPasswordForm) => {
+    try {
+      await forgotPassword({ email: data.email }).unwrap();
+
+      alert("✅ Reset link sent!");
       navigate("/login");
-    };
-  
-    return (
+
+    } catch (err) {
+      alert("❌ Error sending reset email");
+    }
+  };
+
+
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      bgcolor="#0d0d0d"
+      color="white"
+      px={2}
+    >
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-        bgcolor="#0d0d0d"
-        color="white"
-        px={2}
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          maxWidth: 400,
+        }}
       >
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            maxWidth: 400,
-          }}
-        >
-
+        {/* ✅ Logo centré */}
         <Logo />
-  
-        <HeadText title=" Forgot password?" 
-        label="Enter your email address and we’ll send you instructions to reset your password." />
-          
-            <FormInput
-               name="email"
-               label="Email"
-               type="email"
-               placeholder="name@email.com"
-               register={register}
-               error={errors.email}
-            />
 
-  
-          {/* Bouton */}
-          <ButtonForm label="Send reset link" />
-  
-          {/* Retour connexion */}
+        {/* ✅ Titre et sous-texte */}
+        <HeadText
+          title="Forgot password?"
+          label="Enter your email address and we’ll send you instructions to reset your password."
+        />
+
+        {/* ✅ Champ email factorisé */}
+        <FormInput
+          name="email"
+          label="Email"
+          type="email"
+          placeholder="name@email.com"
+          register={register}
+          error={errors.email}
+        />
+
+        {/* ✅ Bouton d’envoi */}
+        <ButtonForm
+          label={isLoading ? "Sending..." : "Send reset link"}
+          disabled={isLoading}
+        />
+
+        {/* ✅ Message d’erreur API */}
+        {error && (
           <Typography
             variant="body2"
-            align="center"
-            color="gray"
-            sx={{ mt: 3 }}
+            color="error"
+            textAlign="center"
+            sx={{ mt: 1 }}
           >
-            Remember your password?{" "}
-            <Link
-              onClick={() => navigate("/login")}
-              underline="hover"
-              color="#d4af37"
-              sx={{ cursor: "pointer" }}
-            >
-              Sign in
-            </Link>
+            Failed to send reset email.
           </Typography>
-        </Box>
+        )}
+
+        {/* ✅ Retour connexion */}
+        <Typography
+          variant="body2"
+          align="center"
+          color="gray"
+          sx={{ mt: 3 }}
+        >
+          Remember your password?{" "}
+          <Link
+            onClick={() => navigate("/login")}
+            underline="hover"
+            color="#d4af37"
+            sx={{ cursor: "pointer" }}
+          >
+            Sign in
+          </Link>
+        </Typography>
       </Box>
-    );
-  }
-  
+    </Box>
+  );
+}

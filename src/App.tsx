@@ -25,17 +25,14 @@ const NavbarTitle = {
     homeUrl: '/home'
 }
 function App() {
-
   return (
-    <Provider store={store}>
-      <ReactRouterAppProvider
-          navigation={navigation}
-          branding={NavbarTitle}
-      >
-          <Outlet />
-      </ReactRouterAppProvider>
-    </Provider>
-  )
+    <ReactRouterAppProvider
+      navigation={navigation}
+      branding={NavbarTitle}
+    >
+      <Outlet />
+    </ReactRouterAppProvider>
+  );
 }
 
 export default App
