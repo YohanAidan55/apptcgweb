@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Container,
   FormControlLabel,
   Link,
   Paper,
@@ -81,14 +80,24 @@ export default function RegisterForm() {
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      sx={{ bgcolor: "#0d0d0d", color: "#fff" }}
-    >
-      <Container maxWidth="xs">
+      <Box
+        sx={{
+          width: "100vw",
+          bgcolor: "#0d0d0d",
+          color: "#fff",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          overflow: "auto",
+          p: 2
+        }}
+      >
+        <Box
+          sx={{
+            width: "90%",
+            maxWidth: 480,   // <= large sur PC, compact sur mobile
+          }}
+        >
 
         <Logo />
 
@@ -237,7 +246,7 @@ export default function RegisterForm() {
             Sign in
           </Link>
         </Typography>
-      </Container>
+      </Box>
     </Box>
   );
 }

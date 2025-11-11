@@ -56,25 +56,25 @@ export default function ForgotPassword() {
 
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      bgcolor="#0d0d0d"
-      color="white"
-      px={2}
-    >
       <Box
-        component="form"
-        onSubmit={handleSubmit(onSubmit)}
         sx={{
+          width: "100vw",
+          height: "100vh",
+          bgcolor: "#0d0d0d",
+          color: "#fff",
           display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          maxWidth: 400,
+          justifyContent: "center",
+          alignItems: "center",
+          overflow: "auto",
+          p: 2
         }}
       >
+        <Box
+          sx={{
+            width: "90%",
+            maxWidth: 480,   // <= large sur PC, compact sur mobile
+          }}
+        >
         {/* ✅ Logo centré */}
         <Logo />
 
