@@ -46,9 +46,9 @@ export default function FormInput({
       helperText={error?.message}
       InputProps={{
         sx: {
-          backgroundColor: "#1a1a1a",
+          backgroundColor: "#fff",
           borderRadius: 2,
-          input: { color: "#fff" },
+          input: { color: "#000" },
         },
         ...(isPassword && {
           endAdornment: (
@@ -67,6 +67,17 @@ export default function FormInput({
       InputLabelProps={{ style: { color: "#aaa" } }}
       sx={{
         mb: 1,
+
+        "& input:-webkit-autofill": {
+          WebkitBoxShadow: "0 0 0 1000px #fff inset !important",  // Fond toujours blanc
+          WebkitTextFillColor: "#000 !important",                  // Texte noir
+          caretColor: "#000",                                      // Curseur noir
+        },
+
+        "& input:-webkit-autofill:focus": {
+          WebkitBoxShadow: "0 0 0 1000px #fff inset !important",
+          WebkitTextFillColor: "#000 !important",
+        },
       }}
     />
   );

@@ -79,8 +79,8 @@ import {
     sx={{
       width: "100vw",
       height: "100vh",
-      bgcolor: "#0d0d0d",
-      color: "#fff",
+      bgcolor: "background.default",
+      color: "text.primary",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",

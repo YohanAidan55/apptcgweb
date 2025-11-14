@@ -19,6 +19,8 @@ import { useCreateUserMutation } from "@/Services/userApi.ts";
   import HeadText from "@/components/shared/HeadText.tsx";
   import FormInput from "@/components/shared/FormInput.tsx";
   import ButtonForm from "@/components/shared/ButtonForm.tsx";
+  import ToggleTheme from "@/components/shared/ToggleTheme";
+  
 
 
 // --- ✅ Schéma de validation avec Zod
@@ -80,18 +82,22 @@ export default function RegisterForm() {
   };
 
   return (
-      <Box
-        sx={{
-          width: "100vw",
-          bgcolor: "#0d0d0d",
-          color: "#fff",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "auto",
-          p: 2
-        }}
-      >
+    <Box
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        bgcolor: "background.default",
+        color: "text.primary",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "auto",
+        p: 2,
+        position: "relative",
+      }}
+    >
+      <ToggleTheme />
+
         <Box
           sx={{
             width: "90%",
@@ -110,7 +116,7 @@ export default function RegisterForm() {
           sx={{
             p: 3,
             borderRadius: 3,
-            backgroundColor: "#111",
+            backgroundColor: "background.paper",
             border: "1px solid #222",
           }}
         >
@@ -217,11 +223,13 @@ export default function RegisterForm() {
               startIcon={<Google />}
               onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}
               sx={{
-                borderColor: "#333",
-                color: "#fff",
+                borderColor: "divider",
+                color: "text.primary",
                 textTransform: "none",
-                backgroundColor: "#1a1a1a",
-                "&:hover": { backgroundColor: "#222" },
+                bgcolor: "background.default",
+                "&:hover": {
+                  bgcolor: "action.hover",
+                },
               }}
             >
               Continue with Google
