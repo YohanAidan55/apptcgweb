@@ -46,9 +46,9 @@ export default function FormInput({
       helperText={error?.message}
       InputProps={{
         sx: {
-          backgroundColor: "#1a1a1a",
+          backgroundColor: "background.default",
           borderRadius: 2,
-          input: { color: "#fff" },
+          input: { color: "text.primary" },
         },
         ...(isPassword && {
           endAdornment: (
