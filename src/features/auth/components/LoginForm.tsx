@@ -20,17 +20,21 @@ import FormInput from "@/components/shared/FormInput.tsx";
 import ButtonForm from "@/components/shared/ButtonForm.tsx";
 import ToggleTheme from "@/components/shared/ToggleTheme";
 
-// --- ✅ Schéma de validation Zod
-const loginSchema = z.object({
-  email: z.string().email("Adresse email invalide"),
-  password: z.string(),
-});
+import { useTranslation } from "react-i18next";
 
-type LoginFormData = z.infer<typeof loginSchema>;
+
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const [login, { isLoading, error }] = useLoginUserMutation();
+  const { t } = useTranslation();
+
+  type LoginFormData = z.infer<typeof loginSchema>;
+
+  const loginSchema = z.object({
+    email: z.string().email(t("login.mailInvalid")),
+    password: z.string().min(1, t("login.passwordRequired")),
+  });
 
   const {
     register,
@@ -76,8 +80,8 @@ export default function LoginForm() {
         <Logo />
 
         <HeadText
-          title="Welcome back"
-          label="Track values, scan new finds, and keep your TCG in sync."
+          title={t("login.title")}
+          label={t("login.subTitle")}
         />
 
         <Paper
@@ -93,7 +97,7 @@ export default function LoginForm() {
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <FormInput
               name="email"
-              label="Email"
+              label={t("login.email")}
               type="email"
               placeholder="name@email.com"
               register={register}
@@ -102,9 +106,9 @@ export default function LoginForm() {
 
             <FormInput
               name="password"
-              label="Password"
+              label={t("login.password")}
               type="password"
-              placeholder="Create a password"
+              placeholder={t("login.createPassword")}
               register={register}
               error={errors.password}
             />
@@ -127,7 +131,7 @@ export default function LoginForm() {
                 }
                 label={
                   <Typography variant="body2" color="text.secondary">
-                    Remember me
+                    {t("login.rememberMe")}
                   </Typography>
                 }
               />
@@ -139,18 +143,18 @@ export default function LoginForm() {
                 color="primary.main"
                 sx={{ fontSize: "0.9rem" }}
               >
-                Forgot password?
+                {t("login.mdpOublie")}
               </Link>
             </Box>
 
             <ButtonForm
-              label={isLoading ? "Signing in..." : "Sign In"}
+              label={isLoading ? t("login.loading") : t("login.button")}
               disabled={isLoading}
             />
 
             {error && (
               <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                Invalid email or password
+                {t("login.error")}
               </Typography>
             )}
 
@@ -160,7 +164,7 @@ export default function LoginForm() {
               color="text.secondary"
               sx={{ my: 2 }}
             >
-              Or continue with
+              {t("login.continue")}
             </Typography>
 
             <Button
@@ -181,7 +185,7 @@ export default function LoginForm() {
                 },
               }}
             >
-              Continue with Google
+              {t("login.google")}
             </Button>
           </Box>
         </Paper>
@@ -192,14 +196,14 @@ export default function LoginForm() {
           color="text.secondary"
           sx={{ mt: 3 }}
         >
-          Don’t have an account?{" "}
+          {t("login.noAccount")}{" "}
           <Link
             component={RouterLink}
             to="/register"
             underline="hover"
             color="primary.main"
           >
-            Sign up
+            {t("login.signUp")}
           </Link>
         </Typography>
       </Box>

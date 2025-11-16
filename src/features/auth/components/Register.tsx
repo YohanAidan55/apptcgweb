@@ -21,29 +21,30 @@ import { useCreateUserMutation } from "@/Services/userApi.ts";
   import ButtonForm from "@/components/shared/ButtonForm.tsx";
   import ToggleTheme from "@/components/shared/ToggleTheme";
 
+  import { useTranslation } from "react-i18next";
 
-
-// --- ✅ Schéma de validation avec Zod
-const registerSchema = z
-  .object({
-    firstName: z.string().min(2, "Deux caractères minimum requis"),
-    lastName: z.string().min(2, "Deux caractères minimum requis"),
-    userName: z.string().min(2, "Deux caractères minimum requis"),
-    email: z.string().email("Adresse email invalide"),
-    password: z
-      .string()
-      .min(8, "Le mot de passe doit contenir au moins 8 caractères")
-      .regex(/[0-9]/, "Le mot de passe doit contenir un chiffre")
-      .regex(/[^a-zA-Z0-9]/, "Le mot de passe doit contenir un symbole"),
-  });
-
-// --- ✅ Type dérivé du schéma
-type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
 
   const navigate = useNavigate();
   const [createUser, { isLoading }] = useCreateUserMutation();
+  const { t } = useTranslation();
+
+    // --- ✅ Schéma de validation avec Zod
+  const registerSchema = z
+    .object({
+      firstName: z.string().min(2, t("register.caractereRequis")),
+      lastName: z.string().min(2, t("register.caractereRequis")),
+      userName: z.string().min(2, t("register.caractereRequis")),
+      email: z.string().email(t("register.mailInvalid")),
+      password: z
+        .string()
+        .min(8, t("register.mdpCaractere"))
+        .regex(/[0-9]/, t("register.mdpChiffre"))
+        .regex(/[^a-zA-Z0-9]/, t("register.mdpSymbole")),
+    });
+
+  type RegisterFormData = z.infer<typeof registerSchema>;
 
   // ✅ React Hook Form
   const {
@@ -107,8 +108,8 @@ export default function RegisterForm() {
 
         <Logo />
 
-        <HeadText title="Get started" 
-        label="Build your collection, track values, and sync across devices." />
+        <HeadText title={t("register.title")}
+        label={t("register.subTitle")} />
 
         {/* Formulaire */}
         <Paper
@@ -124,31 +125,31 @@ export default function RegisterForm() {
 
             <FormInput
               name="firstName"
-              label="First name"
-              placeholder="Prenom"
+              label={t("register.firstName")}
+              placeholder={t("register.firstName")}
               register={register}
               error={errors.firstName}
             />
 
             <FormInput
               name="lastName"
-              label="Last name"
-              placeholder="Nom"
+              label={t("register.lastName")}
+              placeholder={t("register.lastName")}
               register={register}
               error={errors.lastName}
             />
 
             <FormInput
               name="userName"
-              label="User name"
-              placeholder="Username"
+              label={t("register.userName")}
+              placeholder={t("register.userName")}
               register={register}
               error={errors.lastName}
             />
 
             <FormInput
               name="email"
-              label="Email"
+              label={t("register.email")}
               type="email"
               placeholder="name@email.com"
               register={register}
@@ -157,9 +158,9 @@ export default function RegisterForm() {
 
             <FormInput
               name="password"
-              label="Password"
+              label={t("register.password")}
               type="password"
-              placeholder="Create a password"
+              placeholder={t("register.createPassword")}
               register={register}
               error={errors.password}
             />
@@ -167,10 +168,10 @@ export default function RegisterForm() {
             {/* Conditions du mot de passe */}
             <Box textAlign="left" mt={1} mb={1} pl={1}>
               <Typography variant="body2" color="gray">
-                • 8+ characters
+                • {t("register.8caractere")}
               </Typography>
               <Typography variant="body2" color="gray">
-                • 1 number and 1 symbol
+                • {t("register.numberSymbol")}
               </Typography>
             </Box>
 
@@ -192,18 +193,18 @@ export default function RegisterForm() {
                 }
                 label={
                   <Typography variant="body2" color="gray">
-                    I agree to Terms
+                    {t("register.agreeTerms")}
                   </Typography>
                 }
               />
               <Link href="#" underline="hover" color="#d4af37">
-                View policy
+                {t("register.viewTerms")}
               </Link>
             </Box>
 
             {/* Bouton principal */}
             <ButtonForm
-              label={isLoading ? "Creating..." : "Create account"}
+              label={isLoading ? t("register.loading") : t("register.creationAccount")}
               disabled={isLoading}
             />
             
@@ -214,7 +215,7 @@ export default function RegisterForm() {
               color="gray"
               sx={{ my: 2 }}
             >
-              Or sign up with
+              {t("register.continue")}
             </Typography>
 
             <Button
@@ -232,7 +233,7 @@ export default function RegisterForm() {
                 },
               }}
             >
-              Continue with Google
+              {t("register.google")}
             </Button>
           </Box>
         </Paper>
@@ -244,14 +245,14 @@ export default function RegisterForm() {
           color="gray"
           sx={{ mt: 3 }}
         >
-          Already have an account?{" "}
+          {t("register.haveAccount")}{" "}
           <Link
             component={RouterLink}
             to="/login"
             underline="hover"
             color="#d4af37"
           >
-            Sign in
+            {t("register.login")}
           </Link>
         </Typography>
       </Box>

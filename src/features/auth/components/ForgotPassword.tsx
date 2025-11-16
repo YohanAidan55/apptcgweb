@@ -15,18 +15,19 @@ import HeadText from "@/components/shared/HeadText.tsx";
 import FormInput from "@/components/shared/FormInput.tsx";
 import ButtonForm from "@/components/shared/ButtonForm.tsx";
 
-
-// ✅ Schéma Zod
-const schema = z.object({
-  email: z.string().email("Adresse email invalide"),
-});
-
-type ForgotPasswordForm = z.infer<typeof schema>;
-
+import { useTranslation } from "react-i18next";
 
 export default function ForgotPassword() {
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  
+  // ✅ Schéma Zod
+  const schema = z.object({
+    email: z.string().email(t("ForgotPassword.mailInvalid")),
+  });
+
+type ForgotPasswordForm = z.infer<typeof schema>;
 
   // ✅ Hook RTK Query
   const [forgotPassword, { isLoading, error }] = useForgotPasswordMutation();
@@ -46,11 +47,11 @@ export default function ForgotPassword() {
     try {
       await forgotPassword({ email: data.email }).unwrap();
 
-      alert("✅ Reset link sent!");
+      alert(t("ForgotPassword.mailInvalid"));
       navigate("/login");
 
     } catch (err) {
-      alert("❌ Error sending reset email");
+      alert(t("ForgotPassword.mailInvalid"));
     }
   };
 
@@ -80,14 +81,14 @@ export default function ForgotPassword() {
 
         {/* ✅ Titre et sous-texte */}
         <HeadText
-          title="Forgot password?"
-          label="Enter your email address and we’ll send you instructions to reset your password."
+          title={t("ForgotPassword.title")}
+          label={t("ForgotPassword.subTitle")}
         />
 
         {/* ✅ Champ email factorisé */}
         <FormInput
           name="email"
-          label="Email"
+          label={t("ForgotPassword.email")}
           type="email"
           placeholder="name@email.com"
           register={register}
@@ -96,7 +97,7 @@ export default function ForgotPassword() {
 
         {/* ✅ Bouton d’envoi */}
         <ButtonForm
-          label={isLoading ? "Sending..." : "Send reset link"}
+          label={isLoading ? t("ForgotPassword.loading") : t("ForgotPassword.button")}
           disabled={isLoading}
         />
 
@@ -108,7 +109,7 @@ export default function ForgotPassword() {
             textAlign="center"
             sx={{ mt: 1 }}
           >
-            Failed to send reset email.
+            {t("ForgotPassword.error")}
           </Typography>
         )}
 
@@ -119,14 +120,14 @@ export default function ForgotPassword() {
           color="gray"
           sx={{ mt: 3 }}
         >
-          Remember your password?{" "}
+          {t("ForgotPassword.remember")}{" "}
           <Link
             onClick={() => navigate("/login")}
             underline="hover"
             color="#d4af37"
             sx={{ cursor: "pointer" }}
           >
-            Sign in
+            {t("ForgotPassword.backToLogin")}
           </Link>
         </Typography>
       </Box>

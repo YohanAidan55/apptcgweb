@@ -5,6 +5,8 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./route/routes";
 import { Provider } from "react-redux";
 import { store } from "@/Services/store";
+import "./i18n/i18n";
+
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
