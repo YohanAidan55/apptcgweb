@@ -5,6 +5,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 
 import { lightTheme, darkTheme } from "./Theme";
 
+
 interface ThemeContextType {
   toggleTheme: () => void;
   mode: "light" | "dark";
@@ -24,6 +25,7 @@ export default function CustomThemeProvider({ children }: { children: ReactNode 
   useEffect(() => {
     const saved = localStorage.getItem("theme") as "light" | "dark" | null;
     if (saved) setMode(saved);
+
   }, []);
 
   const toggleTheme = () => {
@@ -34,6 +36,7 @@ export default function CustomThemeProvider({ children }: { children: ReactNode 
 
   // On sélectionne le thème défini dans Theme.ts
   const theme = mode === "dark" ? darkTheme : lightTheme;
+
 
   return (
     <ThemeContext.Provider value={{ toggleTheme, mode }}>
