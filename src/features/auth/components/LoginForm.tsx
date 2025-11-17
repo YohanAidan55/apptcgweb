@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Container,
   FormControlLabel,
   Link,
   Paper,
@@ -15,28 +14,27 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useLoginUserMutation } from "@/Services/userApi.ts";
-
 import Logo from "@/components/shared/Logo.tsx";
 import HeadText from "@/components/shared/HeadText.tsx";
 import FormInput from "@/components/shared/FormInput.tsx";
 import ButtonForm from "@/components/shared/ButtonForm.tsx";
+import ToggleTheme from "@/components/shared/ToggleTheme";
+
+import { useTranslation } from "react-i18next";
 
 
-// --- ✅ Schéma de validation Zod
-const loginSchema = z.object({
-  email: z.string().email("Adresse email invalide"),
-  password: z
-    .string()
-});
-
-// --- ✅ Type dérivé du schéma
-type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const [login, { isLoading, error }] = useLoginUserMutation();
+  const { t } = useTranslation();
 
-  // --- ✅ React Hook Form + Zod
-   const [login, { isLoading, error }] = useLoginUserMutation();
+  type LoginFormData = z.infer<typeof loginSchema>;
+
+  const loginSchema = z.object({
+    email: z.string().email(t("login.mailInvalid")),
+    password: z.string().min(1, t("login.passwordRequired")),
+  });
 
   const {
     register,
@@ -48,7 +46,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const result = await login(data).unwrap();   // ✅ APPEL API
+      const result = await login(data).unwrap();
       localStorage.setItem("token", result.token);
       navigate("/home");
     } catch (e) {
@@ -58,32 +56,48 @@ export default function LoginForm() {
 
   return (
     <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      sx={{ bgcolor: "#0d0d0d", color: "#fff" }}
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        bgcolor: "background.default",
+        color: "text.primary",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        overflow: "auto",
+        p: 2,
+        position: "relative",
+      }}
     >
-      <Container maxWidth="xs">
+      <ToggleTheme />
+
+      <Box
+        sx={{
+          width: "90%",
+          maxWidth: 480,
+        }}
+      >
         <Logo />
 
-        <HeadText title="Welcome back" label="Track values, scan new finds, and keep your TCG in sync." />
+        <HeadText
+          title={t("login.title")}
+          label={t("login.subTitle")}
+        />
 
         <Paper
           elevation={6}
           sx={{
-            p: 3,
+            p: { xs: 2, sm: 3 },
             borderRadius: 3,
-            backgroundColor: "#111",
-            border: "1px solid #222",
+            bgcolor: "background.paper",
+            border: "1px solid",
+            borderColor: "divider",
           }}
         >
-          {/* ✅ Formulaire React Hook Form */}
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-            
             <FormInput
               name="email"
-              label="Email"
+              label={t("login.email")}
               type="email"
               placeholder="name@email.com"
               register={register}
@@ -92,13 +106,12 @@ export default function LoginForm() {
 
             <FormInput
               name="password"
-              label="Password"
+              label={t("login.password")}
               type="password"
-              placeholder="Create a password"
+              placeholder={t("login.createPassword")}
               register={register}
               error={errors.password}
             />
-
 
             <Box
               display="flex"
@@ -111,85 +124,89 @@ export default function LoginForm() {
                 control={
                   <Checkbox
                     sx={{
-                      color: "#aaa",
-                      "&.Mui-checked": { color: "#d4af37" },
+                      color: "text.secondary",
+                      "&.Mui-checked": { color: "primary.main" },
                     }}
                   />
                 }
                 label={
-                  <Typography variant="body2" color="gray">
-                    Remember me
+                  <Typography variant="body2" color="text.secondary">
+                    {t("login.rememberMe")}
                   </Typography>
                 }
               />
+
               <Link
                 component={RouterLink}
                 to="/forgot-password"
                 underline="hover"
-                color="#d4af37"
+                color="primary.main"
                 sx={{ fontSize: "0.9rem" }}
               >
-                Forgot password?
+                {t("login.mdpOublie")}
               </Link>
             </Box>
 
             <ButtonForm
-              label={isLoading ? "Signing in..." : "Sign In"}
+              label={isLoading ? t("login.loading") : t("login.button")}
               disabled={isLoading}
             />
 
             {error && (
               <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-                Invalid email or password
+                {t("login.error")}
               </Typography>
             )}
 
             <Typography
               variant="body2"
               align="center"
-              color="gray"
+              color="text.secondary"
               sx={{ my: 2 }}
             >
-              Or continue with
+              {t("login.continue")}
             </Typography>
 
-            <Box display="flex" gap={2}>
-              <Button
-                variant="outlined"
-                fullWidth
-                startIcon={<Google />}
-                onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}
-                sx={{
-                  borderColor: "#333",
-                  color: "#fff",
-                  textTransform: "none",
-                  backgroundColor: "#1a1a1a",
-                  "&:hover": { backgroundColor: "#222" },
-                }}
-              >
-                Continue with Google
-              </Button>
-            </Box>
+            <Button
+              variant="outlined"
+              fullWidth
+              startIcon={<Google />}
+              onClick={() =>
+                (window.location.href =
+                  "http://localhost:8080/oauth2/authorization/google")
+              }
+              sx={{
+                borderColor: "divider",
+                color: "text.primary",
+                textTransform: "none",
+                bgcolor: "background.default",
+                "&:hover": {
+                  bgcolor: "action.hover",
+                },
+              }}
+            >
+              {t("login.google")}
+            </Button>
           </Box>
         </Paper>
 
         <Typography
           variant="body2"
           align="center"
-          color="gray"
+          color="text.secondary"
           sx={{ mt: 3 }}
         >
-          Don’t have an account?{" "}
+          {t("login.noAccount")}{" "}
           <Link
             component={RouterLink}
             to="/register"
             underline="hover"
-            color="#d4af37"
+            color="primary.main"
           >
-            Sign up
+            {t("login.signUp")}
           </Link>
         </Typography>
-      </Container>
+      </Box>
     </Box>
   );
 }

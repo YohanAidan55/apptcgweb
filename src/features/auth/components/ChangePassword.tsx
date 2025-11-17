@@ -15,26 +15,30 @@ import {
   import FormInput from "@/components/shared/FormInput.tsx";
   import ButtonForm from "@/components/shared/ButtonForm.tsx";
   
-  
-  // ✅ Schema Zod
-  const schema = z.object({
-    password: z
-      .string()
-      .min(8, "Must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-  
-  type ChangePasswordForm = z.infer<typeof schema>;
-  
+  import { useTranslation } from "react-i18next";
   
   export default function ChangePassword() {
   
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const { t } = useTranslation();
+
+      // ✅ Schema Zod
+    const schema = z.object({
+      password: z
+        .string()
+        .min(8, t("ChangePassword.mdpCaractere"))
+        .regex(/[0-9]/, t("ChangePassword.mdpChiffre"))
+        .regex(/[^a-zA-Z0-9]/, t("ChangePassword.mdpSymbole")),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("ChangePassword.passwordMismatch"),
+      path: ["confirmPassword"],
+    });
+  
+  type ChangePasswordForm = z.infer<typeof schema>;
+  
   
     // ✅ On récupère le token dans l’URL
     const token =
@@ -65,50 +69,50 @@ import {
           newPassword: data.password,
         }).unwrap();
   
-        alert("✅ Your password has been updated!");
+        alert(t("ChangePassword.success"));
         navigate("/login");
   
       } catch (err) {
-        alert("❌ Error updating password");
+        alert(t("ChangePassword.error"));
       }
     };
   
   
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-        bgcolor="#0d0d0d"
-        color="white"
-        px={2}
-      >
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            maxWidth: 400,
-          }}
-        >
+  <Box
+    sx={{
+      width: "100vw",
+      height: "100vh",
+      bgcolor: "background.default",
+      color: "text.primary",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      overflow: "auto",
+      p: 2
+    }}
+  >
+    <Box
+      sx={{
+        width: "90%",
+        maxWidth: 480,   // <= large sur PC, compact sur mobile
+      }}
+    >
           {/* ✅ Logo */}
           <Logo />
   
           {/* ✅ Titre */}
           <HeadText
-            title="Change your password"
-            label="Please enter your new password below."
+            title={t("ChangePassword.title")}
+            label={t("ChangePassword.subTitle")}
           />
   
           {/* ✅ NEW PASSWORD */}
           <FormInput
             name="password"
-            label="New password"
+            label={t("ChangePassword.newPassword")}
             type="password"
-            placeholder="Enter new password"
+            placeholder={t("ChangePassword.enterPassword")}
             register={register}
             error={errors.password}
           />
@@ -116,16 +120,16 @@ import {
           {/* ✅ CONFIRM PASSWORD */}
           <FormInput
             name="confirmPassword"
-            label="Confirm password"
+            label={t("ChangePassword.confirmPassword")}
             type="password"
-            placeholder="Confirm password"
+            placeholder={t("ChangePassword.confirmPassword")}
             register={register}
             error={errors.confirmPassword}
           />
   
           {/* ✅ BUTTON */}
           <ButtonForm
-            label={isLoading ? "Updating..." : "Update password"}
+            label={isLoading ? t("ChangePassword.loading") : t("ChangePassword.button")}
             disabled={isLoading}
           />
   
@@ -137,7 +141,7 @@ import {
               textAlign="center"
               sx={{ mt: 1 }}
             >
-              Error: Unable to update password.
+              {t("ChangePassword.error")}
             </Typography>
           )}
   
@@ -148,14 +152,14 @@ import {
             color="gray"
             sx={{ mt: 3 }}
           >
-            Return to{" "}
+            {t("ChangePassword.retour")}{" "}
             <Link
               onClick={() => navigate("/login")}
               underline="hover"
               color="#d4af37"
               sx={{ cursor: "pointer" }}
             >
-              login
+              {t("ChangePassword.login")}
             </Link>
           </Typography>
         </Box>
