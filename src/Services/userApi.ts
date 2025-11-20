@@ -1,8 +1,9 @@
+import { Token } from '@mui/icons-material';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const userApi = createApi({
     reducerPath: 'userApi',
-    baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080/api/" }),
+    baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080/api/users" }),
     endpoints: (builder) => ({
 
         // GET /api/users/me
@@ -16,6 +17,15 @@ export const userApi = createApi({
                 url: 'auth/register',
                 method: 'POST',
                 body: user,
+            }),
+        }),
+
+        // POST /api/auth/confirm
+        confirm: builder.mutation({
+            query: (token) => ({
+                url: 'auth/confirm',
+                method: 'POST',
+                body: token,
             }),
         }),
 
@@ -51,6 +61,7 @@ export const userApi = createApi({
 export const {
     useGetUserMeQuery,
     useCreateUserMutation,
+    useConfirmMutation,
     useLoginUserMutation,
     useForgotPasswordMutation,
     useResetPasswordMutation,
