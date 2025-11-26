@@ -6,11 +6,13 @@ import { router } from "./route/routes";
 import { Provider } from "react-redux";
 import { store } from "@/Services/store";
 import "./i18n/i18n";
+import { Toaster } from "react-hot-toast";
 
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
+            <Toaster position="top-center" />
       <RouterProvider router={router} />
     </Provider>
   </StrictMode>

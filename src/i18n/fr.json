@@ -23,7 +23,9 @@
     "continue": "ou inscrivez-vous avec",
     "google": "Continuer avec Google",
     "haveAccount": "Vous avez déjà un compte ?",
-    "login": "Connectez-vous"
+    "login": "Connectez-vous",
+    "mailSent": "E-mail de confirmation envoyé ! Vérifiez votre boîte de réception.",
+    "errorCreation": "Erreur lors de la création du compte."
   },
   "login": {
     "title": "Connectez-vous à votre compte",
@@ -41,7 +43,9 @@
     "continue": "ou continuer avec",
     "google": "Continuer avec Google",
     "noAccount": "Vous n'avez pas de compte ?",
-    "signUp": "Inscrivez-vous"
+    "signUp": "Inscrivez-vous",
+    "confirmSuccess": "Votre compte a bien été confirmé !",
+    "confirmError": "Erreur de confirmation du compte."
   },
   "ForgotPassword": {
     "title": "Mot de passe oublié ?",
@@ -72,5 +76,9 @@
     "error": "Erreur lors du changement de mot de passe.",
     "retour": "Retour à la",
     "login": "connexion"
-  }
+  },
+  "errors": {
+    "EMAIL_ALREADY_EXIST": "Un utilisateur avec cet email existe déjà",
+    "USERNAME_ALREADY_EXIST": "Nom d'utilisateur déjà utilisé"
+}
 }

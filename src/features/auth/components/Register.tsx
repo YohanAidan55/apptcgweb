@@ -12,6 +12,8 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+
 
 import { useCreateUserMutation } from "@/Services/userApi.ts";
 
@@ -62,25 +64,23 @@ export default function RegisterForm() {
   });
 
   // ✅ Soumission du formulaire → API
-  const onSubmit = async (data: RegisterFormData) => {
-    try {
-      const result = await createUser({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        userName: data.userName,
-        email: data.email,
-        password: data.password,
-      }).unwrap();
+const onSubmit = async (data: RegisterFormData) => {
+  try {
+    const result = await createUser(data).unwrap();
 
-      // ✅ Le backend renvoie un token → on le stocke
-      localStorage.setItem("token", result.token);
+    toast.success(t("register.mailSent"));
 
-      navigate("/home");
+    navigate("/login");
+  } catch (err: any) {
+    console.log("API Error:", err);
 
-    } catch (err: any) {
-      console.error("❌ Erreur:", err);
-    }
-  };
+    // Lecture du message backend si disponible
+    const message = t(`errors.${err.data.code}`) || err.data.detail;
+
+    toast.error(message);
+  }
+};
+
 
   return (
     <Box
