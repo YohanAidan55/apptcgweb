@@ -6,6 +6,7 @@ import LoginForm from "../features/auth/components/LoginForm.tsx";
 import RegisterForm from "../features/auth/components/Register.tsx";
 import ForgotPassword from "../features/auth/components/ForgotPassword.tsx";
 import ChangePassword from "../features/auth/components/ChangePassword.tsx";
+import Confirm from "../features/auth/components/Confirm.tsx";
 
 import PrivateRoute from "../core/guard/PrivateRoute.tsx";
 
@@ -32,6 +33,9 @@ export const router = createBrowserRouter([
       {
         path: '/changePassword',
         element: <ChangePassword />,
+      },
+      { path: "/confirm", 
+        element: <Confirm /> 
       },
 
       // ✅ Routes protégées

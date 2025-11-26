@@ -22,12 +22,13 @@ export const userApi = createApi({
 
         // POST /api/auth/confirm
         confirm: builder.mutation({
-            query: (token) => ({
+            query: (token: string) => ({
                 url: 'auth/confirm',
                 method: 'POST',
-                body: token,
+                body: { token },
             }),
         }),
+
 
         // POST /api/auth/login
         loginUser: builder.mutation({

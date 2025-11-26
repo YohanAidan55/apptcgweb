@@ -12,6 +12,9 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { useEffect } from "react";
 
 import { useLoginUserMutation } from "@/Services/userApi.ts";
 import Logo from "@/components/shared/Logo.tsx";
@@ -23,11 +26,24 @@ import ToggleTheme from "@/components/shared/ToggleTheme";
 import { useTranslation } from "react-i18next";
 
 
-
 export default function LoginForm() {
   const navigate = useNavigate();
   const [login, { isLoading, error }] = useLoginUserMutation();
   const { t } = useTranslation();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const confirmed = searchParams.get("confirmed");
+
+    if (confirmed === "true") {
+      toast.success(t("login.confirmSuccess"));
+    } else if (confirmed === "false") {
+      toast.error(t("login.confirmError"));
+    }
+    searchParams.delete("confirmed");
+    setSearchParams(searchParams, { replace: true });
+  }, [searchParams, setSearchParams, t]);
 
   type LoginFormData = z.infer<typeof loginSchema>;
 
