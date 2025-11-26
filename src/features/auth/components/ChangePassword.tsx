@@ -7,6 +7,7 @@ import {
   import { useForm } from "react-hook-form";
   import { z } from "zod";
   import { zodResolver } from "@hookform/resolvers/zod";
+  import { toast } from "react-hot-toast";
   
   import { useResetPasswordMutation } from "@/Services/userApi.ts";
   
@@ -68,12 +69,11 @@ import {
           token: token,
           newPassword: data.password,
         }).unwrap();
-  
-        alert(t("ChangePassword.success"));
+          
+        toast.success(t("ChangePassword.success"));
         navigate("/login");
-  
       } catch (err) {
-        alert(t("ChangePassword.error"));
+        toast.success(t("ChangePassword.error"));
       }
     };
   
@@ -98,16 +98,15 @@ import {
         maxWidth: 480,   // <= large sur PC, compact sur mobile
       }}
     >
-          {/* ✅ Logo */}
           <Logo />
   
-          {/* ✅ Titre */}
           <HeadText
             title={t("ChangePassword.title")}
             label={t("ChangePassword.subTitle")}
           />
   
-          {/* ✅ NEW PASSWORD */}
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+
           <FormInput
             name="password"
             label={t("ChangePassword.newPassword")}
@@ -117,7 +116,6 @@ import {
             error={errors.password}
           />
   
-          {/* ✅ CONFIRM PASSWORD */}
           <FormInput
             name="confirmPassword"
             label={t("ChangePassword.confirmPassword")}
@@ -127,13 +125,11 @@ import {
             error={errors.confirmPassword}
           />
   
-          {/* ✅ BUTTON */}
           <ButtonForm
             label={isLoading ? t("ChangePassword.loading") : t("ChangePassword.button")}
             disabled={isLoading}
           />
   
-          {/* ✅ API ERROR MESSAGE */}
           {error && (
             <Typography
               variant="body2"
@@ -145,7 +141,6 @@ import {
             </Typography>
           )}
   
-          {/* ✅ Return to login */}
           <Typography
             variant="body2"
             align="center"
@@ -162,6 +157,7 @@ import {
               {t("ChangePassword.login")}
             </Link>
           </Typography>
+        </Box>
         </Box>
       </Box>
     );
