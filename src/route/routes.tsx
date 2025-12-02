@@ -1,12 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import AppLayout from "../components/layout/AppLayout.tsx";
+import ResponsiveLayout from "../components/layout/ResponsiveLayout.tsx";
 
 import LoginForm from "../features/auth/components/LoginForm.tsx";
 import RegisterForm from "../features/auth/components/Register.tsx";
 import ForgotPassword from "../features/auth/components/ForgotPassword.tsx";
 import ChangePassword from "../features/auth/components/ChangePassword.tsx";
 import Confirm from "../features/auth/components/Confirm.tsx";
+
+import SearchCard from "../features/app/SearchCard.tsx";
+import Collection from "../features/app/Collection.tsx";
+import Profile from "../features/app//Profile.tsx";
 
 import PrivateRoute from "../core/guard/PrivateRoute.tsx";
 
@@ -35,22 +40,21 @@ export const router = createBrowserRouter([
         element: <ChangePassword />,
       },
       { path: "/confirm", 
-        element: <Confirm /> 
+        element: <Confirm />,
       },
 
       // ✅ Routes protégées
       {
         element: <PrivateRoute />,
         children: [
-          {
-            element: <AppLayout />,
-            children: [
-              {
-                path: '/home',
-                element: <div>Home page</div>,
-              }
-            ]
-          }
+        {
+          element: <ResponsiveLayout />,
+          children: [
+            { path: "recherche", element: <SearchCard /> },
+            { path: "collection", element: <Collection /> },
+            { path: "profile", element: <Profile /> },
+          ],
+        },
         ]
       }
     ],

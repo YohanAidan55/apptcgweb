@@ -64,7 +64,7 @@ export default function LoginForm() {
     try {
       const result = await login(data).unwrap();
       localStorage.setItem("token", result.token);
-      navigate("/home");
+      navigate("/recherche");
     } catch (e) {
       console.error("❌ Login failed:", e);
     }

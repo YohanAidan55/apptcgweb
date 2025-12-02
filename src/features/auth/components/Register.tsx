@@ -66,7 +66,7 @@ export default function RegisterForm() {
   // ✅ Soumission du formulaire → API
 const onSubmit = async (data: RegisterFormData) => {
   try {
-    const result = await createUser(data).unwrap();
+    await createUser(data).unwrap();
 
     toast.success(t("register.mailSent"));
 
