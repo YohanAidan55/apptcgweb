@@ -1,6 +1,6 @@
-// src/components/shared/Sidebar.tsx
-import { Box, List, Typography, useTheme } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
+
+import SidebarNavItem from "./SideBarNavItem";
 
 import Logo from "@/components/shared/Logo.tsx";
 
@@ -17,55 +17,32 @@ import ProfileWhite from "@/assets/utilisateurWhite.png";
 import ProfileBlack from "@/assets/utilisateur.png";
 
 export default function Sidebar() {
-
-  const theme = useTheme(); // récupère ton thème
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const isDark = theme.palette.mode === "dark";
-
-  const menu = [
-    { path: "/recherche", label: "Recherche", gold: SearchGold, white: SearchWhite, black: SearchBlack },
-    { path: "/collection", label: "Collection", gold: CollectionGold, white: CollectionWhite, black: CollectionBlack },
-    { path: "/profile", label: "Profil", gold: ProfileGold, white: ProfileWhite, black: ProfileBlack },
-  ];
-
   return (
-    <List>
-      <Logo/>
-      {menu.map((item) => {
-        const isActive = location.pathname === item.path;
+    <Box sx={{ width: 240, p: 2 }}>
+      <Logo />
+      <SidebarNavItem
+        path="/recherche"
+        label="Recherche"
+        iconGold={SearchGold}
+        iconWhite={SearchWhite}
+        iconBlack={SearchBlack}
+      />
 
-        // ---- LOGIQUE DES IMAGES ----
-        let icon = item.white;
-        if (isActive) icon = item.gold;
-        else if (!isDark) icon = item.black;
+      <SidebarNavItem
+        path="/collection"
+        label="Collection"
+        iconGold={CollectionGold}
+        iconWhite={CollectionWhite}
+        iconBlack={CollectionBlack}
+      />
 
-        return (
-          <Box
-            key={item.path}
-            onClick={() => navigate(item.path)}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              cursor: "pointer",
-              gap: 0.5,
-            }}
-          >
-            <img src={icon} alt="" style={{ width: 30 }} />
-
-            <Typography
-              sx={{
-                fontSize: "0.75rem",
-                color: isActive ? "primary.main" : "text.secondary",
-              }}
-            >
-              {item.label}
-            </Typography>
-          </Box>
-        );
-      })}
-    </List>
+      <SidebarNavItem
+        path="/profile"
+        label="Profil"
+        iconGold={ProfileGold}
+        iconWhite={ProfileWhite}
+        iconBlack={ProfileBlack}
+      />
+    </Box>
   );
 }
