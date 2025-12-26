@@ -14,11 +14,7 @@ export default function SearchCard() {
     <Box
       sx={{
         width: "100%",
-        minHeight: "100vh",
-        bgcolor: "background.default",
-        color: "text.primary",
-        p: 2,
-        pb: 10, // espace pour le footer
+        maxWidth: "100%",
       }}
     >
       {/* --- TOP BAR --- */}
@@ -30,12 +26,18 @@ export default function SearchCard() {
           mb: 2,
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        {/* Logo : visible uniquement sur smartphone */}
+        <Box sx={{ display: { xs: "block", sm: "none" } }}>
           <Logo width={60} />
-          <Typography fontSize="0.8rem" fontWeight={300}>
-            Search Cards
-          </Typography>
         </Box>
+
+        {/* Texte : toujours visible */}
+        <Typography fontSize="1.5rem" fontWeight={300}>
+          Search Cards
+        </Typography>
+      </Box>
+
 
         <IconButton
           sx={{
@@ -109,7 +111,7 @@ export default function SearchCard() {
         })}
       </Box>
 
-      {/* --- LISTE DES CARTES PLUS TARD --- */}
+      {/* --- LISTE DES CARTES --- */}
       <Box mt={3}>
         {/* future card list */}
       </Box>

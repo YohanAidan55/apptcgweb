@@ -16,26 +16,41 @@ export default function ResponsiveLayout() {
         bgcolor: "background.default",
       }}
     >
-      
-      {!isMobile && (        
-        <Box width="220px" sx={{ width: 240, borderRight: "1px solid #222" }}>
-          <ToggleTheme />
-
+      {!isMobile && (
+        <Box
+          sx={{
+            width: 240,
+            flexShrink: 0,
+            borderRight: "1px solid #222",
+          }}
+        >
           <Sidebar />
         </Box>
       )}
 
-      <Box flex={1} p={2} overflow="auto">
+      <Box
+        sx={{
+          flex: 1,
+          p: 2,
+          overflow: "auto",
+          width: "100%",
+          minWidth: 0,
+          display: "flex",
+        }}
+      >
         <Outlet />
       </Box>
 
       {isMobile && (
-        <Box position="fixed" bottom={0} width="100%" sx={{ borderTop: "1px solid #222" }}>
+        <Box
+          position="fixed"
+          bottom={0}
+          width="100%"
+          sx={{ borderTop: "1px solid #222" }}
+        >
           <Footer />
         </Box>
       )}
     </Box>
-    
   );
 }
-
