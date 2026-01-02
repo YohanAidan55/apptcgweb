@@ -1,11 +1,14 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, useTheme, useMediaQuery } from "@mui/material";
 import Sidebar from "./SideBar";
 import Footer from "./FooterNav";
 import { Outlet } from "react-router-dom";
 import ToggleTheme from "@/components/shared/ToggleTheme";
 
 export default function ResponsiveLayout() {
-  const isMobile = useMediaQuery("(max-width: 768px)");
+
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <Box
