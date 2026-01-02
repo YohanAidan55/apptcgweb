@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-hot-toast";
 
 import { useForgotPasswordMutation } from "@/Services/userApi.ts";
 
@@ -46,46 +47,45 @@ type ForgotPasswordForm = z.infer<typeof schema>;
   const onSubmit = async (data: ForgotPasswordForm) => {
     try {
       await forgotPassword({ email: data.email }).unwrap();
-
-      alert(t("ForgotPassword.mailInvalid"));
+      toast.success(t("ForgotPassword.linkSent"));
       navigate("/login");
-
     } catch (err) {
-      alert(t("ForgotPassword.mailInvalid"));
+      toast.success(t("ForgotPassword.mailInvalid"));
+      
     }
   };
 
 
   return (
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "background.default",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Box
         sx={{
-          width: "100vw",
-          height: "100vh",
-          bgcolor: "background.default",
-          color: "text.primary",
+          width: "100%",
+          maxWidth: 480,
+          px: 2,
+          pt: { xs: 0, sm: 0 },
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
-          overflow: "auto",
-          p: 2
         }}
       >
-        <Box
-          sx={{
-            width: "90%",
-            maxWidth: 480,   // <= large sur PC, compact sur mobile
-          }}
-        >
-        {/* ✅ Logo centré */}
         <Logo />
 
-        {/* ✅ Titre et sous-texte */}
         <HeadText
           title={t("ForgotPassword.title")}
           label={t("ForgotPassword.subTitle")}
         />
 
-        {/* ✅ Champ email factorisé */}
+        <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+
         <FormInput
           name="email"
           label={t("ForgotPassword.email")}
@@ -95,13 +95,11 @@ type ForgotPasswordForm = z.infer<typeof schema>;
           error={errors.email}
         />
 
-        {/* ✅ Bouton d’envoi */}
         <ButtonForm
           label={isLoading ? t("ForgotPassword.loading") : t("ForgotPassword.button")}
           disabled={isLoading}
         />
 
-        {/* ✅ Message d’erreur API */}
         {error && (
           <Typography
             variant="body2"
@@ -113,7 +111,6 @@ type ForgotPasswordForm = z.infer<typeof schema>;
           </Typography>
         )}
 
-        {/* ✅ Retour connexion */}
         <Typography
           variant="body2"
           align="center"
@@ -130,6 +127,7 @@ type ForgotPasswordForm = z.infer<typeof schema>;
             {t("ForgotPassword.backToLogin")}
           </Link>
         </Typography>
+      </Box>
       </Box>
     </Box>
   );
