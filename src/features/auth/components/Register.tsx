@@ -85,27 +85,29 @@ const onSubmit = async (data: RegisterFormData) => {
   return (
     <Box
       sx={{
-        width: "100vw",
-        height: "100vh",
+        minHeight: "100vh",
         bgcolor: "background.default",
-        color: "text.primary",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
-        overflow: "auto",
-        p: 2,
-        position: "relative",
       }}
     >
-      <ToggleTheme />
+      {/* éléments overlay */}
+      <Box sx={{ position: "absolute", top: 16, right: 16 }}>
+        <ToggleTheme />
+      </Box>
 
-        <Box
-          sx={{
-            width: "90%",
-            maxWidth: 480,   // <= large sur PC, compact sur mobile
-          }}
-        >
-
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 480,
+          px: 2,
+          pt: { xs: 0, sm: 0 },
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
         <Logo />
 
         <HeadText title={t("register.title")}

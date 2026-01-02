@@ -79,25 +79,25 @@ import {
   
   
     return (
-  <Box
-    sx={{
-      width: "100vw",
-      height: "100vh",
-      bgcolor: "background.default",
-      color: "text.primary",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      overflow: "auto",
-      p: 2
-    }}
-  >
-    <Box
-      sx={{
-        width: "90%",
-        maxWidth: 480,   // <= large sur PC, compact sur mobile
-      }}
-    >
+      <Box
+        sx={{
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 480,
+            px: 2,
+            pt: { xs: 0, sm: 0 },
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <Logo />
   
           <HeadText

@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "../App";
+import App from "./App.tsx";
 import AppLayout from "../components/layout/AppLayout.tsx";
 import ResponsiveLayout from "../components/layout/ResponsiveLayout.tsx";
 
@@ -9,11 +9,11 @@ import ForgotPassword from "../features/auth/components/ForgotPassword.tsx";
 import ChangePassword from "../features/auth/components/ChangePassword.tsx";
 import Confirm from "../features/auth/components/Confirm.tsx";
 
-import SearchCard from "../features/app/SearchCard.tsx";
-import Collection from "../features/app/Collection.tsx";
-import Profile from "../features/app//Profile.tsx";
+import SearchCard from "../features/Dashboard/SearchCard.tsx";
+import Collection from "../features/Dashboard/Collection.tsx";
+import Profile from "../features/Dashboard/Profile.tsx";
 
-import PrivateRoute from "../core/guard/PrivateRoute.tsx";
+import PrivateRoute from "./PrivateRoute.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -42,11 +42,6 @@ export const router = createBrowserRouter([
       { path: "/confirm", 
         element: <Confirm />,
       },
-
-      // ✅ Routes protégées
-      {
-        element: <PrivateRoute />,
-        children: [
         {
           element: <ResponsiveLayout />,
           children: [
@@ -55,8 +50,24 @@ export const router = createBrowserRouter([
             { path: "profile", element: <Profile /> },
           ],
         },
-        ]
-      }
+        
+      
+      
+
+      // ✅ Routes protégées
+      // {
+      //   element: <PrivateRoute />,
+      //   children: [
+      //   {
+      //     element: <ResponsiveLayout />,
+      //     children: [
+      //       { path: "recherche", element: <SearchCard /> },
+      //       { path: "collection", element: <Collection /> },
+      //       { path: "profile", element: <Profile /> },
+      //     ],
+      //   },
+      //   ]
+      // }
     ],
   },
 ]);
