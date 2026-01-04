@@ -1,4 +1,3 @@
-import './App.css'
 import {ReactRouterAppProvider} from "@toolpad/core/react-router";
 import { Outlet } from "react-router-dom";
 import CustomThemeProvider from "@/theme/ThemeContext";
@@ -10,14 +9,12 @@ const NavbarTitle = {
 }
 function App() {
   return (
-    <ReactRouterAppProvider
-      branding={NavbarTitle}
-    >
-    <CustomThemeProvider>  
-      <Outlet />
-    </CustomThemeProvider> 
+    <ReactRouterAppProvider branding={NavbarTitle}>
+      <CustomThemeProvider>  
+        <Outlet />
+      </CustomThemeProvider> 
     </ReactRouterAppProvider>
   );
 }
 
-export default App
+export default App;
