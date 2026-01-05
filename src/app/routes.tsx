@@ -12,6 +12,8 @@ import Confirm from "../features/auth/components/Confirm.tsx";
 import SearchCard from "../features/Dashboard/SearchCard.tsx";
 import Collection from "../features/Dashboard/Collection.tsx";
 import Profile from "../features/Dashboard/Profile.tsx";
+import CardDetail from "../features/Dashboard/CardDetail.tsx";
+
 
 import PrivateRoute from "./PrivateRoute.tsx";
 
@@ -48,6 +50,7 @@ export const router = createBrowserRouter([
             { path: "recherche", element: <SearchCard /> },
             { path: "collection", element: <Collection /> },
             { path: "profile", element: <Profile /> },
+            { path: "carteDetail/:id", element: <CardDetail /> },
           ],
         },
         

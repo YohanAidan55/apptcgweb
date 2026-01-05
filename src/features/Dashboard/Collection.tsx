@@ -3,9 +3,81 @@ import { Box, Typography, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Logo from "@/components/shared/Logo"; // si tu as ton composant logo
 import TuneIcon from "@mui/icons-material/Tune";
+import { useNavigate } from "react-router-dom";
+
+import carte from "@/assets/cartes/minnie.jpg";
 
 
 export default function Collection() {
+
+  const navigate = useNavigate();
+
+const cards = [
+  {
+    id: 1,
+    name: "Minnie",
+    price: 750,
+    qty: 1,
+    image: carte,
+  },
+  {
+    id: 2,
+    name: "Mickey",
+    price: 800,
+    qty: 1,
+    image: carte,
+  },
+  {
+    id: 3,
+    name: "Ariel",
+    price: 750.45,
+    qty: 1,
+    image: carte,
+  },
+  {
+    id: 4,
+    name: "Simba",
+    price: 120.99,
+    qty: 1,
+    image: carte,
+  },
+    {
+    id: 4,
+    name: "Simba",
+    price: 120.99,
+    qty: 1,
+    image: carte,
+  },
+    {
+    id: 4,
+    name: "Simba",
+    price: 120.99,
+    qty: 1,
+    image: carte,
+  },
+    {
+    id: 4,
+    name: "Simba",
+    price: 120.99,
+    qty: 1,
+    image: carte,
+  },
+    {
+    id: 4,
+    name: "Simba",
+    price: 120.99,
+    qty: 1,
+    image: carte,
+  },
+    {
+    id: 4,
+    name: "Simba",
+    price: 120.99,
+    qty: 1,
+    image: carte,
+  },
+];
+
 
   return (
     <Box
@@ -106,7 +178,74 @@ export default function Collection() {
 
       {/* --- LISTE DES CARTES --- */}
       <Box mt={3}>
-        {/* future card list */}
+        <Box
+          mt={3}
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "repeat(2, 1fr)",
+              sm: "repeat(3, 1fr)",
+              md: "repeat(4, 1fr)",
+              lg: "repeat(5, 1fr)",
+            },
+            gap: 2,
+          }}
+        >
+          {cards.map((card) => (
+            <Box
+              key={card.id}
+              sx={{
+                bgcolor: "background.paper",
+                borderRadius: 3,
+                overflow: "hidden",
+                border: "1px solid",
+                borderColor: "divider",
+                cursor: "pointer",
+                transition: "transform 0.15s ease, box-shadow 0.15s ease",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow: 6,
+                },
+              }}
+            >
+              {/* Image */}
+              <Box
+              onClick={() => navigate(`/carteDetail/${card.id}`)}
+
+                component="img"
+                src={card.image}
+                alt={card.name}
+                sx={{
+                  width: "100%",
+                  aspectRatio: "3 / 4",
+                  objectFit: "cover",
+                }}
+              />
+
+              {/* Infos */}
+              <Box
+                sx={{
+                  p: 1.2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography fontSize="0.85rem" fontWeight={500}>
+                  €{card.price.toLocaleString("fr-FR")}
+                </Typography>
+
+                <Typography
+                  fontSize="0.75rem"
+                  color="text.secondary"
+                >
+                  x{card.qty}
+                </Typography>
+              </Box>
+            </Box>
+          ))}
+        </Box>
+
       </Box>
     </Box>
   );
