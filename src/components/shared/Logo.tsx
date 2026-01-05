@@ -1,20 +1,24 @@
-import React from 'react';
 import logo from "@/assets/LogoApp.png";
-import {
-    Box,
-  } from "@mui/material";
+import { Box } from "@mui/material";
 
-const Logo = ({}) => {
-    return(
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-        <Box
+type LogoProps = {
+  width?: number;   // largeur personnalisable
+};
+
+const Logo = ({ width = 120 }: LogoProps) => {
+  return (
+    <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+      <Box
         component="img"
         src={logo}
         alt="TCG Project Logo"
-        sx={{ width: 120, height: 120 }}
-        />
-        </Box>
-    )
-}
+        sx={{
+          width,
+          height: "auto",         // garde les proportions automatiquement
+        }}
+      />
+    </Box>
+  );
+};
 
 export default Logo;
